@@ -34,10 +34,7 @@ public class Product {
 	private String tipoProducto;
 	
 	private String nombre;
-	private String descripcion;
+	private String descripcion;	
 	
-	@Field("costo_apertura")
-	@JsonProperty("costo_apertura")
-	private Boolean costoApertura;
 	
 }

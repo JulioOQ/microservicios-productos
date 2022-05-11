@@ -54,7 +54,7 @@ public class ProductController {
 			p.setTipoProducto(product.getTipoProducto());
 			p.setNombre(product.getNombre());
 			p.setDescripcion(product.getDescripcion());
-			p.setCostoApertura(product.getCostoApertura());
+			
 
 			return productService.save(p);
 		}).map(p -> ResponseEntity.created(URI.create("/products".concat(p.getIdProducto())))
