@@ -3,6 +3,8 @@ package com.jvoq.microservicios.productos.app.controllers;
 import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,19 +16,27 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.jvoq.microservicios.productos.app.models.documents.Product;
 import com.jvoq.microservicios.productos.app.services.ProductService;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@RefreshScope
 @RestController
 @RequestMapping("/products")
 public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Value("${offers.discount:default}")
+	private String discount;
+	
+	
+	@GetMapping("view-discounts")
+	public String viewDiscounts() {
+		return "Discount productos is " + discount;
+	}
 
 	@GetMapping
 	public Mono<ResponseEntity<Flux<Product>>> getAll() {
