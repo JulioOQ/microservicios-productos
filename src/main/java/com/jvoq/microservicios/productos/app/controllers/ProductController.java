@@ -29,13 +29,12 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	
-	@Value("${offers.discount:default}")
-	private String discount;
+	@Value("${mensaje.verificacion:default}")
+	private String mensaje;
 	
-	
-	@GetMapping("view-discounts")
+	@GetMapping("verificar")
 	public String viewDiscounts() {
-		return "Discount productos is " + discount;
+		return "Mensaje -> " + mensaje;
 	}
 
 	@GetMapping
