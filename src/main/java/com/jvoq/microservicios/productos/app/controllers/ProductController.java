@@ -54,6 +54,8 @@ public class ProductController {
 			p.setTipoProducto(product.getTipoProducto());
 			p.setNombre(product.getNombre());
 			p.setDescripcion(product.getDescripcion());
+			p.setJuridico(product.getJuridico());
+			p.setNatural(product.getNatural());
 			
 
 			return productService.save(p);

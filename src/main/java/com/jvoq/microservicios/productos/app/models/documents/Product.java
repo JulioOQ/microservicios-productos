@@ -1,6 +1,5 @@
 package com.jvoq.microservicios.productos.app.models.documents;
 
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -18,23 +17,25 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonPropertyOrder({ "idProducto", "tipoProducto", "nombre", "descripcion","costoApertura","idBanco"}) 
+@JsonPropertyOrder({ "idProducto", "tipoProducto", "nombre", "descripcion", "costoApertura", "idBanco" })
 public class Product {
 
 	@JsonProperty("id_producto")
-	@Id	
+	@Id
 	private String idProducto;
-	
+
 	@Field("id_banco")
 	@JsonProperty("id_banco")
-	private String idBanco;	
-	
+	private String idBanco;
+
 	@Field("tipo_producto")
 	@JsonProperty("tipo_producto")
 	private String tipoProducto;
-	
+
 	private String nombre;
-	private String descripcion;	
-	
-	
+	private String descripcion;
+
+	private int juridico;
+	private int natural;
+
 }
