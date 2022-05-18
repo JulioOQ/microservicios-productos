@@ -20,22 +20,32 @@ import lombok.Setter;
 @JsonPropertyOrder({ "idProducto", "tipoProducto", "nombre", "descripcion", "costoApertura", "idBanco" })
 public class Product {
 
-	@JsonProperty("id_producto")
 	@Id
+	@JsonProperty("id_producto")
 	private String idProducto;
-
 	@Field("id_banco")
 	@JsonProperty("id_banco")
 	private String idBanco;
-
 	@Field("tipo_producto")
 	@JsonProperty("tipo_producto")
 	private String tipoProducto;
-
 	private String nombre;
 	private String descripcion;
-
 	private int juridico;
 	private int natural;
-
+	@Field("max_deposito")
+	@JsonProperty("max_deposito")
+	private int maxDeposito;
+	@Field("max_retiro")
+	@JsonProperty("max_retiro")
+	private int maxRetiro;
+	@Field("com_deposito")
+	@JsonProperty("com_deposito")
+	private Double comDeposito;
+	@Field("com_retiro")
+	@JsonProperty("com_retiro")
+	private Double comRetiro;
+	@Field("com_mantenimiento")
+	@JsonProperty("com_mantenimiento")
+	private Double comMantenimiento;
 }

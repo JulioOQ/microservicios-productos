@@ -28,10 +28,10 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
-	
+
 	@Value("${mensaje.verificacion:default}")
 	private String mensaje;
-	
+
 	@GetMapping("verificar")
 	public String viewDiscounts() {
 		return "Mensaje -> " + mensaje;
@@ -46,9 +46,7 @@ public class ProductController {
 	public Mono<ResponseEntity<Product>> getById(@PathVariable String id) {
 		return productService.findById(id).map(p -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(p))
 				.defaultIfEmpty(ResponseEntity.notFound().build());
-
 	}
-	
 
 	@PostMapping
 	public Mono<ResponseEntity<Product>> create(@RequestBody Product product) {
@@ -59,13 +57,17 @@ public class ProductController {
 
 	@PutMapping("/{id}")
 	public Mono<ResponseEntity<Product>> update(@RequestBody Product product, @PathVariable String id) {
-		return productService.findById(id).flatMap(p -> {			
+		return productService.findById(id).flatMap(p -> {
 			p.setTipoProducto(product.getTipoProducto());
 			p.setNombre(product.getNombre());
 			p.setDescripcion(product.getDescripcion());
 			p.setJuridico(product.getJuridico());
 			p.setNatural(product.getNatural());
-			
+			p.setMaxDeposito(product.getMaxDeposito());
+			p.setMaxRetiro(product.getMaxRetiro());
+			p.setComDeposito(product.getComDeposito());
+			p.setComRetiro(product.getComRetiro());
+			p.setComMantenimiento(product.getComMantenimiento());
 
 			return productService.save(p);
 		}).map(p -> ResponseEntity.created(URI.create("/products".concat(p.getIdProducto())))
