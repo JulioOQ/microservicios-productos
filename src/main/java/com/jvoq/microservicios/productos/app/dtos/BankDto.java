@@ -1,7 +1,4 @@
-package com.jvoq.microservicios.productos.app.models.documents;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.jvoq.microservicios.productos.app.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -11,15 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Document(collection = "banks")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonPropertyOrder({ "idBanco", "nombre", "ruc", "telefono", "telefono", "correo", "direccion" })
-public class Bank {
+public class BankDto {
 
-	@Id
 	@JsonProperty("id_banco")
 	private String idBanco;
 	private String nombre;

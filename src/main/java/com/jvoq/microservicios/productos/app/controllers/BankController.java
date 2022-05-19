@@ -1,6 +1,8 @@
 package com.jvoq.microservicios.productos.app.controllers;
 
 import java.net.URI;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.jvoq.microservicios.productos.app.dtos.BankDto;
 import com.jvoq.microservicios.productos.app.models.documents.Bank;
 import com.jvoq.microservicios.productos.app.services.BankService;
 import reactor.core.publisher.Flux;
@@ -27,51 +31,49 @@ public class BankController {
 
 	@Autowired
 	BankService bankService;
-	
+
+	@Autowired
+	private ModelMapper mapper;
+
 	@Value("${mensaje.verificacion:default}")
 	private String mensaje;
-	
+
 	@GetMapping("verificar")
 	public String viewDiscounts() {
 		return "Mensaje -> " + mensaje;
 	}
 
 	@GetMapping
-	public Mono<ResponseEntity<Flux<Bank>>> getAll() {
+	public Mono<ResponseEntity<Flux<BankDto>>> getAll() {
 		return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(bankService.findAll()));
 	}
 
 	@GetMapping("/{id}")
-	public Mono<ResponseEntity<Bank>> getById(@PathVariable String id) {
+	public Mono<ResponseEntity<BankDto>> getById(@PathVariable String id) {
 		return bankService.findById(id).map(b -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(b))
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
-	public Mono<ResponseEntity<Bank>> create(@RequestBody Bank bank) {
-		return bankService.save(bank).map(b -> ResponseEntity.created(URI.create("/banks".concat(b.getIdBanco())))
+	public Mono<ResponseEntity<BankDto>> create(@RequestBody BankDto bankDto) {
+		return bankService.save(bankDto).map(b -> ResponseEntity.created(URI.create("/banks".concat(b.getIdBanco())))
 				.contentType(MediaType.APPLICATION_JSON).body(b));
 	}
 
 	@PutMapping("/{id}")
-	public Mono<ResponseEntity<Bank>> update(@RequestBody Bank bank, @PathVariable String id) {
-		return bankService.findById(id).flatMap(b -> {
-			b.setNombre(bank.getNombre());
-			b.setCorreo(bank.getCorreo());
-			b.setDireccion(bank.getDireccion());
-			b.setTelefono(bank.getTelefono());
-			b.setRuc(bank.getRuc());
-			
-
-			return bankService.save(b);
-		}).map(b -> ResponseEntity.created(URI.create("/banks".concat(b.getIdBanco())))
-				.contentType(MediaType.APPLICATION_JSON).body(b)).defaultIfEmpty(ResponseEntity.notFound().build());
+	public Mono<ResponseEntity<BankDto>> update(@RequestBody BankDto bankDto, @PathVariable String id) {
+		return bankService.update(bankDto, id)
+				.map(b -> ResponseEntity.created(URI.create("/banks".concat(b.getIdBanco())))
+						.contentType(MediaType.APPLICATION_JSON).body(b))
+				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{id}")
 	public Mono<ResponseEntity<Void>> drop(@PathVariable String id) {
 		return bankService.findById(id).flatMap(b -> {
-			return bankService.delete(b).then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)));
-		}).defaultIfEmpty(new ResponseEntity<Void>(HttpStatus.NOT_FOUND));
+			Bank bank = mapper.map(b, Bank.class);
+
+			return bankService.delete(bank).then(Mono.just(new ResponseEntity<Void>(HttpStatus.OK)));
+		}).defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 }

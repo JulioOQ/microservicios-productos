@@ -1,8 +1,11 @@
 package com.jvoq.microservicios.productos.app.services;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jvoq.microservicios.productos.app.dtos.ProductDto;
 import com.jvoq.microservicios.productos.app.models.documents.Product;
 import com.jvoq.microservicios.productos.app.models.repository.ProductRepository;
 
@@ -15,19 +18,40 @@ public class ProductServiceImplement implements ProductService {
 	@Autowired
 	ProductRepository productRepository;
 
+	@Autowired
+	private ModelMapper mapper;
+
 	@Override
-	public Flux<Product> findAll() {
-		return productRepository.findAll();
+	public Flux<ProductDto> findAll() {
+		return productRepository.findAll().map(this::convertEntityToDto);
 	}
 
 	@Override
-	public Mono<Product> findById(String id) {
-		return productRepository.findById(id);
+	public Mono<ProductDto> findById(String id) {
+		return productRepository.findById(id).map(this::convertEntityToDto);
 	}
 
 	@Override
-	public Mono<Product> save(Product product) {
-		return productRepository.save(product);
+	public Mono<ProductDto> save(ProductDto productDto) {
+		Product product = this.convertDtoToEntity(productDto);
+		return productRepository.save(product).map(this::convertEntityToDto);
+	}
+
+	@Override
+	public Mono<ProductDto> update(ProductDto productDto, String id) {
+		return this.findById(id).flatMap(p -> {
+			p.setTipoProducto(productDto.getTipoProducto());
+			p.setNombre(productDto.getNombre());
+			p.setDescripcion(productDto.getDescripcion());
+			p.setJuridico(productDto.getJuridico());
+			p.setNatural(productDto.getNatural());
+			p.setMaxDeposito(productDto.getMaxDeposito());
+			p.setMaxRetiro(productDto.getMaxRetiro());
+			p.setComDeposito(productDto.getComDeposito());
+			p.setComRetiro(productDto.getComRetiro());
+			p.setComMantenimiento(productDto.getComMantenimiento());
+			return this.save(p);
+		});
 	}
 
 	@Override
@@ -35,4 +59,13 @@ public class ProductServiceImplement implements ProductService {
 		return productRepository.delete(product);
 	}
 
+	private ProductDto convertEntityToDto(Product product) {
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+		return mapper.map(product, ProductDto.class);
+	}
+
+	private Product convertDtoToEntity(ProductDto productDto) {
+		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+		return mapper.map(productDto, Product.class);
+	}
 }

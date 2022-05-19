@@ -9,5 +9,4 @@ class MicroserviciosProductosApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
