@@ -1,5 +1,7 @@
 package com.jvoq.microservicios.productos.app.dtos;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -35,4 +37,6 @@ public class ProductDto {
 	private Double comRetiro;
 	@JsonProperty("com_mantenimiento")
 	private Double comMantenimiento;
+	@JsonProperty("fecha_creacion")
+	private Date fechaCreacion;
 }

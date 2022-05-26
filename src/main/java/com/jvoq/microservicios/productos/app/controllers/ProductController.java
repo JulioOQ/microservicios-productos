@@ -77,4 +77,11 @@ public class ProductController {
 			return productService.delete(product).then(Mono.just(new ResponseEntity<Void>(HttpStatus.OK)));
 		}).defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
+
+	@GetMapping("/{i}/rango/{f}")
+	public Mono<ResponseEntity<Flux<Product>>> findProductsByFechaBetween(@PathVariable String i,
+			@PathVariable String f) {
+		return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+				.body(productService.findProductsByFechaBetween(i, f)));
+	}
 }

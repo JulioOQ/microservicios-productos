@@ -17,4 +17,6 @@ public interface ProductService {
 	public Mono<ProductDto> update(ProductDto productDto, String id);
 
 	public Mono<Void> delete(Product product);
+	
+	public Flux<Product> findProductsByFechaBetween(String i, String f);
 }

@@ -1,5 +1,7 @@
 package com.jvoq.microservicios.productos.app.models.documents;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -48,4 +50,7 @@ public class Product {
 	@Field("com_mantenimiento")
 	@JsonProperty("com_mantenimiento")
 	private Double comMantenimiento;
+	@Field("fecha_creacion")
+	@JsonProperty("fecha_creacion")
+	private Date fechaCreacion;
 }

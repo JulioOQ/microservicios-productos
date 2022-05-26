@@ -1,5 +1,8 @@
 package com.jvoq.microservicios.productos.app.services;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,7 @@ public class ProductServiceImplement implements ProductService {
 
 	@Override
 	public Mono<ProductDto> save(ProductDto productDto) {
+		productDto.setFechaCreacion(new Date());
 		Product product = this.convertDtoToEntity(productDto);
 		return productRepository.save(product).map(this::convertEntityToDto);
 	}
@@ -50,6 +54,7 @@ public class ProductServiceImplement implements ProductService {
 			p.setComDeposito(productDto.getComDeposito());
 			p.setComRetiro(productDto.getComRetiro());
 			p.setComMantenimiento(productDto.getComMantenimiento());
+			p.setFechaCreacion(p.getFechaCreacion());
 			return this.save(p);
 		});
 	}
@@ -57,6 +62,13 @@ public class ProductServiceImplement implements ProductService {
 	@Override
 	public Mono<Void> delete(Product product) {
 		return productRepository.delete(product);
+	}
+
+	@Override
+	public Flux<Product> findProductsByFechaBetween(String i, String f) {
+		LocalDate start = LocalDate.parse(i);
+		LocalDate end = LocalDate.parse(f);
+		return productRepository.findByFechaCreacionBetween(start, end);
 	}
 
 	private ProductDto convertEntityToDto(Product product) {
